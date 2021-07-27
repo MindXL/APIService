@@ -1,0 +1,6 @@
+{
+    "name": "APIService",
+    "script": "./dist/index.js",
+    "cwd": "./",
+    "out_file": "./api.log"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "APIService",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/MindXL/APIService.git",
+  "author": "MindXL <1634300602@qq.com>",
+  "license": "MIT",
+
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node ./dist/index.js"
+  },
+
+  "devDependencies": {
+    "@types/node": "^16.4.3"
+  },
+  "dependencies": {
+    "fastify": "^3.19.2",
+    "prettier": "^2.3.2",
+    "typescript": "^4.3.5"
+  }
+}
