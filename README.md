@@ -2,9 +2,11 @@
 
 Powered by [Fastify][https://www.fastify.io/]
 
+Thanks _TsFreddie_ for knowledge support.
+
 # How to start
 
-**First of all**: `yarn tsc` or `npm run build`
+**First of all**: `yarn build`
 
 ## Start from nodejs
 
