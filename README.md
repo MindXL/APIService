@@ -14,10 +14,10 @@ Thanks _TsFreddie_ for knowledge support.
 node ./dist/index.js
 ```
 
-## Start from npm
+## Start from yarn
 
 ```
-npm start
+yarn start
 ```
 
 ## Start from pm2

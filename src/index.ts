@@ -3,13 +3,9 @@ import { fastify } from 'fastify';
 
 import { ddnet } from './ddnet';
 
-const app = fastify({ logger: false });
+require('dotenv').config('../.env');
 
-declare module 'axios' {
-    interface AxiosRequestConfig {
-        cache?: boolean;
-    }
-}
+const app = fastify({ logger: false });
 
 const ddnetAxios = axios.create({
     baseURL: 'https://ddnet.tw',
@@ -35,10 +31,12 @@ ddnet(app, ddnetAxios);
 
 const start = async () => {
     try {
-        await app.listen(3000);
+        const PORT = process.env.PORT!;
+        await app.listen(PORT);
 
-        app.log.info(`server listening on localhost:3000`);
-        console.info(`server listening on localhost:3000`);
+        const info = `server listening on localhost:${PORT}`;
+        app.log.info(info);
+        console.info(info);
     } catch (err) {
         app.log.error(err);
         process.exit(1);

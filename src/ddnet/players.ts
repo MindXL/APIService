@@ -1,15 +1,18 @@
 import { FastifyInstance } from 'fastify';
 import { AxiosInstance, AxiosError } from 'axios';
 
+const uri = 'players';
+
 export const players = (app: FastifyInstance, axios: AxiosInstance) => {
     app.get('/ddnet/players/:player', async (request, reply) => {
         const player: string = (request.params as any).player;
-
         try {
-            const response = await axios.get(`/players`, {
+            const response = await axios.get(`/players/`, {
                 params: {
                     json2: player,
                 },
+                uri: uri,
+                keyword: player,
             });
 
             if (!response.data.player) {

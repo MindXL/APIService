@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { readdirSync } from 'fs';
 
 import { Time } from '../utils';
 
@@ -13,7 +14,13 @@ type axiosCache = {
 };
 
 export const cache = (axiosi: AxiosInstance) => {
-    const cacheKeys = ['/players'];
+    const excludeFiles = ['index', 'cache'].map(file => file + '.js');
+    const cacheKeys = readdirSync(__dirname)
+        .filter(file => {
+            return file.endsWith('.js') && excludeFiles.indexOf(file) === -1;
+        })
+        .map(file => file.slice(0, -3));
+
     let cache: axiosCache = {};
     cacheKeys.map(key => {
         cache[key] = {};
@@ -38,16 +45,15 @@ export const cache = (axiosi: AxiosInstance) => {
             config.cancelToken = source.token;
 
             // 去缓存池获取缓存数据
-            const url = config.url!;
+            const uri = config.uri!;
             let cacheData;
-            if (url === '/players')
-                cacheData = cache[url]?.[config.params.json2];
+            if (cacheKeys.indexOf(uri) !== -1)
+                cacheData = cache[uri]?.[config.keyword!];
+            // cacheData = cache[uri]?.[config.params.json2];
 
             // 判断缓存池中是否存在已有数据 存在的话 再判断是否过期
             // 未过期 source.cancel会取消当前的请求 并将内容返回到拦截器的err中
-            const expire = getExpireTime();
             if (cacheData && getExpireTime() - cacheData.expire < EXPIRE_TIME) {
-                cacheData.expire = expire;
                 source.cancel(JSON.stringify(cacheData));
             }
         }
@@ -69,9 +75,10 @@ export const cache = (axiosi: AxiosInstance) => {
                         expire: getExpireTime(),
                         data: response.data,
                     };
-                    const url = response.config.url!;
-                    if (url === '/players')
-                        cache[url][response.config.params.json2] = data;
+
+                    const uri = response.config.uri!;
+                    if (cacheKeys.indexOf(uri) !== -1)
+                        cache[uri][response.config.keyword!] = data;
                 }
             }
             return response;
@@ -88,6 +95,6 @@ export const cache = (axiosi: AxiosInstance) => {
 };
 
 // 获取当前时间
-function getExpireTime() {
+function getExpireTime(): number {
     return new Date().getTime();
 }
